@@ -9,7 +9,10 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Lists">
-        <Stack.Screen name="Lists" component={listsummary} options={{ title: 'My Lists of To Dos' }} />
+        <Stack.Screen name="Lists" component={listsummary} options={{ title: 'My Lists of To Dos',
+          headerStyle: { backgroundColor: '#5194be' },
+          headerTintColor: '#fff',
+          headerTitleStyle: { fontWeight: 'bold' } }} />
         <Stack.Screen name="Todos" component={todos} />
       </Stack.Navigator>
     </NavigationContainer>

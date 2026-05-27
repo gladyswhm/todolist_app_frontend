@@ -6,18 +6,18 @@ import { View, Text, FlatList, TextInput, TouchableOpacity, StyleSheet } from 'r
 
 export default function listsummary({ navigation }) {
 
-    const [lists, setLists] = useState([]);
-    const [newListName, setNewListName] = useState('');
+    const [lists, setlists] = useState([]);
+    const [newlists, setnewlists] = useState('');
 
-    const addNewList = () => {
-        if (!newListName.trim()) return;
-        setLists([...lists, { id: Date.now(), name: newListName.trim() }]);
-        setNewListName('');
+    const addnewlist = () => {
+        if (!newlists.trim()) return;
+        setlists([...lists, { id: Date.now(), name: newlists.trim() }]);
+        setnewlists('');
     };
 
     return (
         <View style={styles.container}>
-        <Text style={styles.subtitle}>Lists</Text>
+        <Text style={styles.subtitle}>Lists You Have Created:</Text>
         <FlatList
             data={lists}
             keyExtractor={(item) => item.id.toString()}
@@ -27,17 +27,17 @@ export default function listsummary({ navigation }) {
                 <Text style={styles.arrow}>›</Text>
             </TouchableOpacity>
             )}
-            ListEmptyComponent={<Text style={styles.empty}>No todo lists yet. Create one now.</Text>}
+            ListEmptyComponent={<Text style={styles.empty}>No to do lists yet. Create one now.</Text>}
         />
         <View style={styles.inputRow}>
         <TextInput
             style={styles.input}
             placeholder="Enter a new list name here"
-            value={newListName}
-            onChangeText={setNewListName}
+            value={newlists}
+            onChangeText={setnewlists}
         />
-        <TouchableOpacity style={styles.addButton} onPress={addNewList}>
-            <Text style={styles.addButtonText}>Add New List</Text>
+        <TouchableOpacity style={styles.addbutton} onPress={addnewlist}>
+            <Text style={styles.addbutton_text}>+</Text>
         </TouchableOpacity>
         </View></View>
     );
@@ -51,14 +51,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 16, 
         borderRadius: 10,
-        backgroundColor: '#5652523d',
+        backgroundColor: '#7ea0b676',
         marginBottom: 10,
     },
-    arrow: { fontSize: 20, color: '#aaa' },  listName: { fontSize: 16 },
+    arrow: { fontSize: 20, color: '#000000' },  listName: { fontSize: 16 },
     empty: { textAlign: 'center', marginTop: 40, color: '#aaa' },
     inputRow: { flexDirection: 'row', marginTop: 16 },
     input: { flex: 1, borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 10, marginRight: 8 },
-    addButton: { backgroundColor: '#41cb6a', borderRadius: 8, padding: 10, justifyContent: 'center' },
-    addButtonText: { color: '#fff', fontWeight: 'bold' },
+    addbutton: { backgroundColor: '#5194be', borderRadius: 25, width: 45, height: 45, justifyContent: 'center', alignItems: 'center' },
+    addbutton_text: { color: '#fff', fontSize: 28, fontWeight: 'bold' },
     subtitle: { fontSize: 14, color: '#aaa', marginBottom: 16 },
 });
