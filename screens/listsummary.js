@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { View, Text, FlatList, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-export default function listsummary({ navigation }) {
+export default function Listsummary({ navigation }) {
 
     const [lists, setlists] = useState([]);
     const [newlists, setnewlists] = useState('');

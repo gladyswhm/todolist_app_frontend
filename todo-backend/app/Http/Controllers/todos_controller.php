@@ -8,8 +8,11 @@ use Illuminate\Http\Request;
 class todos_controller extends Controller
 {
     //GET call: gets all to do items in that list
-    public function index()
+    public function index(Request $request)
     {
+        if($request->has('todolistID')){
+            return todos_model::where('todolistID', $request->todolistID)->get();
+        }
         return todos_model::all();
     }
 
@@ -35,7 +38,7 @@ class todos_controller extends Controller
     {
         $update_todo = todos_model::findOrFail($id);
         $update_todo->update([
-            'description' => $request->description,
+            'description' => $request->description ?? $update_todo->description,
             'status' => $request->status,
         ]);
         return $update_todo;

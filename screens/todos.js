@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { View, Text, FlatList, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
-export default function todos({ navigation, route }) {
+export default function Todos({ navigation, route }) {
   const { listName, listID } = route.params;
   const [todos, settodos] = useState([]);
   const [newtodos, setnewtodos] = useState('');
