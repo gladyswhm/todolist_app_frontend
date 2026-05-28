@@ -1,7 +1,7 @@
 //shows the different lists of to dos
 //features: can add multiple lists
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, FlatList, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 
 export default function listsummary({ navigation }) {
@@ -9,9 +9,33 @@ export default function listsummary({ navigation }) {
     const [lists, setlists] = useState([]);
     const [newlists, setnewlists] = useState('');
 
-    const addnewlist = () => {
+    const myAPI_URL = 'http://10.0.2.2:8000/api';
+
+    useEffect(() => {
+        fetchLists();
+    }, []);
+
+    const fetchLists = async () => {
+        const response = await fetch(`${myAPI_URL}/todo-lists`);
+        const data = await response.json();
+        setlists(data);
+    };
+    //changed this to allow saving into the database through API   
+    // const addnewlist = () => {
+    //     if (!newlists.trim()) return;
+    //     setlists([...lists, { id: Date.now(), name: newlists.trim() }]);
+    //     setnewlists('');
+    // };
+
+    const addnewlist = async () => {
         if (!newlists.trim()) return;
-        setlists([...lists, { id: Date.now(), name: newlists.trim() }]);
+        const response = await fetch(`${myAPI_URL}/todo-lists`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ titlename: newlists.trim() }),
+        });
+        const newcreatedlist = await response.json();
+        setlists([...lists, newcreatedlist]);
         setnewlists('');
     };
 
@@ -22,8 +46,8 @@ export default function listsummary({ navigation }) {
             data={lists}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
-            <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('Todos', { listId: item.id, listName: item.name })}>
-                <Text style={styles.listName}>{item.name}</Text>
+            <TouchableOpacity style={styles.listItem} onPress={() => navigation.navigate('Todos', { listID: item.id, listName: item.titlename })}>
+                <Text style={styles.listName}>{item.titlename}</Text>
                 <Text style={styles.arrow}>›</Text>
             </TouchableOpacity>
             )}

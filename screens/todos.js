@@ -8,20 +8,41 @@ export default function todos({ navigation, route }) {
   const [todos, settodos] = useState([]);
   const [newtodos, setnewtodos] = useState('');
 
+  const myAPI_URL = 'http://10.0.2.2:8000/api';
+
   useEffect(() => {
     navigation.setOptions({ title: "List: " + listName,
     headerStyle: { backgroundColor: '#528590c7' },
     headerTintColor: '#fff',}); //title of to do list selected
+    fetchtodos();
   }, []);
 
-  const addtodos = () => {
+  //added to fetch existing to do items from database
+  const fetchtodos = async () => {
+    const response = await fetch(`${myAPI_URL}/todos?todolistID=${listID}`);
+    const data = await response.json();
+    settodos(data);
+  };
+
+  const addtodos = async () => {
     if (!newtodos.trim()) return;
-    settodos([...todos, {id: Date.now(), description: newtodos.trim(), status: false}]);
+    const response = await fetch(`${myAPI_URL}/todos`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ description: newtodos.trim(), status: false, todolistID: listID }),
+    });
+    const newcreatedtodo = await response.json();
+    settodos([...todos, newcreatedtodo]);
     setnewtodos('');
   };
 
-  const toggletodo = (id) => {
-    settodos(todos.map(todo=>todo.id===id ? {...todo, status: !t.status} : todo));
+  const toggletodo = async (id, currentstatus) => {
+    await fetch(`${myAPI_URL}/todos/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: !currentstatus }),
+    });
+    settodos(todos.map(todo=>todo.id===id ? {...todo, status: !todo.status} : todo));
   };
 
   return (
@@ -31,7 +52,7 @@ export default function todos({ navigation, route }) {
         data={todos}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.todoinfo} onPress={() => toggletodo(item.id)}>
+          <TouchableOpacity style={styles.todoinfo} onPress={() => toggletodo(item.id, item.status)}>
             <Text style={styles.statuscheck}>{item.status ? '☑' : '☐'}</Text>
             <Text style={[styles.todotext, item.status && styles.completiontext]}>{item.description}</Text>
           </TouchableOpacity>
